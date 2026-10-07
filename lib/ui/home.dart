@@ -10,7 +10,11 @@ import 'detalhes.dart';
 
 class Home extends StatefulWidget {
   final VoidCallback onToggleTheme;
-  const Home({super.key, required this.onToggleTheme});
+
+  const Home({
+    super.key,
+    required this.onToggleTheme,
+  });
 
   @override
   State<Home> createState() => _HomeState();
@@ -18,6 +22,7 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> {
   final StorageService storage = StorageService();
+
   List<Caminhada> caminhadas = [];
 
   @override
@@ -33,54 +38,71 @@ class _HomeState extends State<Home> {
 
   @override
   Widget build(BuildContext context) {
-    final colorScheme = Theme.of(context).colorScheme;
-
     return Scaffold(
       appBar: AppBar(
         title: const Text('Caminhadas'),
-        backgroundColor: colorScheme.surface,
-        foregroundColor: colorScheme.primary,
+        backgroundColor: Colors.red,
+        foregroundColor: Colors.white,
         elevation: 0,
       ),
-      drawer: DrawerMenu(onToggleTheme: widget.onToggleTheme),
-      backgroundColor: colorScheme.surface,
+
+      drawer: DrawerMenu(
+        onToggleTheme: widget.onToggleTheme,
+      ),
+
+      backgroundColor: Colors.white,
+
       body: Padding(
         padding: const EdgeInsets.all(16),
+
         child: GridView.builder(
           itemCount: caminhadas.length,
-          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+
+          gridDelegate:
+              const SliverGridDelegateWithFixedCrossAxisCount(
             crossAxisCount: 2,
             crossAxisSpacing: 12,
             mainAxisSpacing: 12,
           ),
+
           itemBuilder: (context, index) {
             final c = caminhadas[index];
+
             return InkWell(
               onTap: () {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (_) => DetalhesScreen(caminhada: c),
+                    builder: (_) => DetalhesScreen(
+                      caminhada: c,
+                    ),
                   ),
                 );
               },
+
               child: Container(
                 decoration: BoxDecoration(
-                  color: colorScheme.surface,
+                  color: Colors.white,
                   borderRadius: BorderRadius.circular(12),
-                  border: Border.all(color: colorScheme.outline),
+                  border: Border.all(
+                    color: Colors.red,
+                  ),
                 ),
+
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
+
                   children: [
                     c.fotoPath == null
-                        ? Icon(
+                        ? const Icon(
                             Icons.photo,
                             size: 60,
-                            color: colorScheme.primary,
+                            color: Colors.red,
                           )
                         : ClipRRect(
-                            borderRadius: BorderRadius.circular(8),
+                            borderRadius:
+                                BorderRadius.circular(8),
+
                             child: Image.file(
                               File(c.fotoPath!),
                               height: 80,
@@ -88,11 +110,13 @@ class _HomeState extends State<Home> {
                               fit: BoxFit.cover,
                             ),
                           ),
+
                     const SizedBox(height: 8),
+
                     Text(
                       c.titulo,
-                      style: TextStyle(
-                        color: colorScheme.onSurface,
+                      style: const TextStyle(
+                        color: Colors.red,
                         fontWeight: FontWeight.w500,
                       ),
                     ),
@@ -103,14 +127,21 @@ class _HomeState extends State<Home> {
           },
         ),
       ),
+
       floatingActionButton: FloatingActionButton(
-        backgroundColor: colorScheme.primary,
+        backgroundColor: Colors.red,
+        foregroundColor: Colors.white,
+
         child: const Icon(Icons.add),
+
         onPressed: () async {
           await Navigator.push(
             context,
-            MaterialPageRoute(builder: (_) => const NovaCaminhadaScreen()),
+            MaterialPageRoute(
+              builder: (_) => const NovaCaminhadaScreen(),
+            ),
           );
+
           carregar();
         },
       ),

@@ -10,13 +10,17 @@ import '../services/location_service.dart';
 import '../models/caminhada.dart';
 
 class NovaCaminhadaScreen extends StatefulWidget {
-  const NovaCaminhadaScreen({super.key});
+  const NovaCaminhadaScreen({
+    super.key,
+  });
 
   @override
-  State<NovaCaminhadaScreen> createState() => _NovaCaminhadaScreenState();
+  State<NovaCaminhadaScreen> createState() =>
+      _NovaCaminhadaScreenState();
 }
 
-class _NovaCaminhadaScreenState extends State<NovaCaminhadaScreen> {
+class _NovaCaminhadaScreenState
+    extends State<NovaCaminhadaScreen> {
   LatLng origem = LatLng(-22.713, -46.818);
   LatLng? destino;
 
@@ -32,7 +36,11 @@ class _NovaCaminhadaScreenState extends State<NovaCaminhadaScreen> {
   void calcular() {
     if (destino == null) return;
 
-    distancia = location.calcularDistancia(origem, destino!);
+    distancia = location.calcularDistancia(
+      origem,
+      destino!,
+    );
+
     calorias = location.calcularCalorias(distancia);
     tempo = location.calcularTempo(distancia);
 
@@ -42,7 +50,9 @@ class _NovaCaminhadaScreenState extends State<NovaCaminhadaScreen> {
   Future<void> tirarFoto() async {
     final picker = ImagePicker();
 
-    final foto = await picker.pickImage(source: ImageSource.camera);
+    final foto = await picker.pickImage(
+      source: ImageSource.camera,
+    );
 
     if (foto != null && mounted) {
       setState(() {
@@ -57,19 +67,36 @@ class _NovaCaminhadaScreenState extends State<NovaCaminhadaScreen> {
     await showDialog(
       context: context,
       builder: (_) => AlertDialog(
-        backgroundColor: Theme.of(context).colorScheme.surface,
-        title: const Text("Título da caminhada"),
-        content: TextField(controller: tituloController),
+        backgroundColor: Colors.white,
+
+        title: const Text(
+          "Título da caminhada",
+          style: TextStyle(
+            color: Colors.green,
+          ),
+        ),
+
+        content: TextField(
+          controller: tituloController,
+        ),
+
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
-            child: const Text("Cancelar"),
+            child: const Text(
+              "Cancelar",
+              style: TextStyle(
+                color: Colors.green,
+              ),
+            ),
           ),
+
           ElevatedButton(
             style: ElevatedButton.styleFrom(
-              backgroundColor: Theme.of(context).colorScheme.primary,
+              backgroundColor: Colors.green,
               foregroundColor: Colors.white,
             ),
+
             onPressed: () async {
               final caminhada = Caminhada(
                 titulo: tituloController.text,
@@ -87,6 +114,7 @@ class _NovaCaminhadaScreenState extends State<NovaCaminhadaScreen> {
               Navigator.pop(context);
               Navigator.pop(context);
             },
+
             child: const Text("Salvar"),
           ),
         ],
@@ -98,16 +126,16 @@ class _NovaCaminhadaScreenState extends State<NovaCaminhadaScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final colorScheme = Theme.of(context).colorScheme;
-
     return Scaffold(
       appBar: AppBar(
         title: const Text("Nova Caminhada"),
-        backgroundColor: colorScheme.surface,
-        foregroundColor: colorScheme.primary,
+        backgroundColor: Colors.green,
+        foregroundColor: Colors.white,
         elevation: 0,
       ),
-      backgroundColor: colorScheme.surface,
+
+      backgroundColor: Colors.white,
+
       body: Column(
         children: [
           Expanded(
@@ -115,16 +143,21 @@ class _NovaCaminhadaScreenState extends State<NovaCaminhadaScreen> {
               options: MapOptions(
                 initialCenter: origem,
                 initialZoom: 15,
+
                 onTap: (tapPosition, latLng) {
                   destino = latLng;
                   calcular();
                 },
               ),
+
               children: [
                 TileLayer(
-                  urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
-                  userAgentPackageName: 'com.example.caminhadas',
+                  urlTemplate:
+                      'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
+                  userAgentPackageName:
+                      'com.example.caminhadas',
                 ),
+
                 if (destino != null)
                   MarkerLayer(
                     markers: [
@@ -132,19 +165,20 @@ class _NovaCaminhadaScreenState extends State<NovaCaminhadaScreen> {
                         point: origem,
                         width: 40,
                         height: 40,
-                        child: Icon(
+                        child: const Icon(
                           Icons.location_on,
-                          color: colorScheme.primary,
+                          color: Colors.green,
                           size: 40,
                         ),
                       ),
+
                       Marker(
                         point: destino!,
                         width: 40,
                         height: 40,
-                        child: Icon(
+                        child: const Icon(
                           Icons.flag,
-                          color: colorScheme.secondary,
+                          color: Colors.green,
                           size: 40,
                         ),
                       ),
@@ -153,9 +187,11 @@ class _NovaCaminhadaScreenState extends State<NovaCaminhadaScreen> {
               ],
             ),
           ),
+
           if (destino != null)
             Padding(
               padding: const EdgeInsets.all(16),
+
               child: Column(
                 children: [
                   Text(
@@ -164,12 +200,19 @@ class _NovaCaminhadaScreenState extends State<NovaCaminhadaScreen> {
                     "${calorias.toStringAsFixed(0)} calorias "
                     "em aproximadamente "
                     "${tempo.toStringAsFixed(0)} min.",
-                    style: TextStyle(color: colorScheme.onSurface),
+
+                    style: const TextStyle(
+                      color: Colors.green,
+                    ),
                   ),
+
                   const SizedBox(height: 10),
+
                   if (imagem != null)
                     ClipRRect(
-                      borderRadius: BorderRadius.circular(8),
+                      borderRadius:
+                          BorderRadius.circular(8),
+
                       child: Image.file(
                         imagem!,
                         height: 120,
@@ -177,29 +220,45 @@ class _NovaCaminhadaScreenState extends State<NovaCaminhadaScreen> {
                         fit: BoxFit.cover,
                       ),
                     ),
+
                   const SizedBox(height: 10),
+
                   ElevatedButton.icon(
                     onPressed: tirarFoto,
-                    icon: const Icon(Icons.camera_alt, color: Colors.white),
+
+                    icon: const Icon(
+                      Icons.camera_alt,
+                      color: Colors.white,
+                    ),
+
                     label: const Text(
                       "Tirar Foto",
-                      style: TextStyle(color: Colors.white),
+                      style: TextStyle(
+                        color: Colors.white,
+                      ),
                     ),
+
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: colorScheme.primary,
+                      backgroundColor: Colors.green,
                       foregroundColor: Colors.white,
                     ),
                   ),
+
                   const SizedBox(height: 10),
+
                   ElevatedButton(
                     onPressed: salvar,
+
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: colorScheme.primary,
+                      backgroundColor: Colors.green,
                       foregroundColor: Colors.white,
                     ),
+
                     child: const Text(
                       "Salvar Caminhada",
-                      style: TextStyle(color: Colors.white),
+                      style: TextStyle(
+                        color: Colors.white,
+                      ),
                     ),
                   ),
                 ],
